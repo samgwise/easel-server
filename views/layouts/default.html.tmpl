@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    %= await tags.favicon()
+    <title><%= (ctx.content.title ?? '') != '' ? ctx.content.title : "Easel" %></title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main>
+      <%= ctx.content.main %>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@mojojs/core": "^1.26.10"
+  },
+  "devDependencies": {
+    "@types/busboy": "^1.5.0",
+    "@types/js-yaml": "^4.0.3",
+    "@types/mime-types": "^2.1.0",
+    "@types/node": "^22.5.0",
+    "@types/nopt": "^3.0.29",
+    "@types/react": "^19.0.0",
+    "@types/stack-utils": "^2.0.1",
+    "@types/tough-cookie": "^4.0.2",
+    "@types/ws": "^8.5.3",
+    "nodemon": "^3.0.0",
+    "tap": "^21.0.0",
+    "typescript": "^5.5.4"
+  },
+  "scripts": {
+    "build": "npx tsc --build ./",
+    "build:test": "npm run build && npm test",
+    "build:watch": "npm run build -- --watch",
+    "dev": "npx nodemon lib/index.js server",
+    "start": "NODE_ENV=production node lib/index.js server -l http://*:8080",
+    "test": "node --test test/*.js"
+  }
+}
