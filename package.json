@@ -1,6 +1,7 @@
 {
   "type": "module",
   "dependencies": {
+    "@duckdb/node-api": "^1.2.0-alpha.14",
     "@mojojs/core": "^1.26.10"
   },
   "devDependencies": {
