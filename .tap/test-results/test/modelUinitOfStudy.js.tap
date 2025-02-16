@@ -1,0 +1,19 @@
+TAP version 14
+# Subtest: Exercise UnitOfStudy model
+    # Subtest: Init
+        1..0
+    ok 1 - Init # time=1.27ms
+    
+    # Subtest: create record
+        1..0
+    ok 2 - create record # time=4.443ms
+    
+    ok 3 - New unit of study record creation returns 3 element tuple.
+    ok 4 - New unit of study record creation returns id.
+    ok 5 - New unit of study record creation returns id greater than 0. But value was 1
+    ok 6 - New unit of study record creation returns UoS code.
+    ok 7 - New unit of study record creation returns UoS name.
+    1..7
+ok 1 - Exercise UnitOfStudy model # time=8.773ms
+
+1..1

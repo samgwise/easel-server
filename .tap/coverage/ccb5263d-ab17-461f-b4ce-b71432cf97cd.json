@@ -1,0 +1,115 @@
+{
+  "result": [
+    {
+      "scriptId": "365",
+      "url": "file:///C:/Users/samgw/projects/GitHub/easel-server/lib/models/unitOfStudy.js",
+      "functions": [
+        {
+          "functionName": "",
+          "ranges": [
+            {
+              "startOffset": 0,
+              "endOffset": 1271,
+              "count": 1
+            }
+          ],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "initModel",
+          "ranges": [
+            {
+              "startOffset": 115,
+              "endOffset": 656,
+              "count": 1
+            }
+          ],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "",
+          "ranges": [
+            {
+              "startOffset": 245,
+              "endOffset": 648,
+              "count": 1
+            }
+          ],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "listUnitsOfStudy",
+          "ranges": [
+            {
+              "startOffset": 661,
+              "endOffset": 844,
+              "count": 0
+            }
+          ],
+          "isBlockCoverage": false
+        },
+        {
+          "functionName": "newUnitOfStudy",
+          "ranges": [
+            {
+              "startOffset": 849,
+              "endOffset": 1229,
+              "count": 1
+            }
+          ],
+          "isBlockCoverage": true
+        }
+      ]
+    }
+  ],
+  "timestamp": 258106.831019,
+  "source-map-cache": {
+    "file:///C:/Users/samgw/projects/GitHub/easel-server/lib/models/unitOfStudy.js": {
+      "lineLengths": [
+        29,
+        80,
+        25,
+        23,
+        67,
+        22,
+        21,
+        57,
+        80,
+        47,
+        43,
+        48,
+        49,
+        18,
+        15,
+        11,
+        5,
+        47,
+        48,
+        39,
+        11,
+        32,
+        5,
+        42,
+        42,
+        135,
+        15,
+        34,
+        52,
+        52,
+        5,
+        1,
+        39
+      ],
+      "data": {
+        "version": 3,
+        "file": "unitOfStudy.js",
+        "sourceRoot": "",
+        "sources": [
+          "file:///C:/Users/samgw/projects/GitHub/easel-server/src/models/unitOfStudy.ts"
+        ],
+        "names": [],
+        "mappings": "AAIA,MAAM,OAAO,cAAc;IACvB,4EAA4E;IAC5E,KAAK,CAAC,SAAS,CAAC,EAAoB;QAChC,MAAM,EAAE,CAAC,GAAG,CAAC;;SAEZ,CAAC,CAAC,IAAI,CAAC,CAAC,CAAC,EAAE;YACR,EAAE,CAAC,GAAG,CAAC;;;;;;;;aAQN,CAAC,CAAA;QACN,CAAC,CAAC,CAAA;IACN,CAAC;IAED,KAAK,CAAC,gBAAgB,CAAC,EAAoB,EAAE,aAAqB;QAC9D,MAAM,MAAM,GAAG,MAAM,EAAE,CAAC,aAAa,CAAC;;SAErC,CAAC,CAAC;QAEH,OAAO,MAAM,CAAC,OAAO,EAAE,CAAC;IAC5B,CAAC;IAED,KAAK,CAAC,cAAc,CAAC,EAAoB,EAAE,IAAY,EAAE,IAAY;QACjE,MAAM,MAAM,GAAG,MAAM,EAAE,CAAC,OAAO,CAAC;;aAE3B,CAAC,CAAC;QACP,MAAM,CAAC,IAAI,CAAC,CAAC,IAAI,EAAE,IAAI,CAAC,CAAC,CAAC;QAC1B,MAAM,MAAM,GAAG,MAAM,MAAM,CAAC,aAAa,EAAE,CAAC;QAE5C,OAAO,CAAC,MAAM,CAAC,OAAO,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAW,EAAE,IAAI,EAAE,IAAI,CAAC,CAAA;IACzD,CAAC;CACJ"
+      }
+    }
+  }
+}
