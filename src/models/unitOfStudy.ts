@@ -1,6 +1,16 @@
 import { DuckDBConnection, DuckDBValue } from '@duckdb/node-api';
 
-type UnitOfStudy = [number, string, number, string]
+export interface UnitOfStudy {
+    code: string;
+    name: string;
+    year: number;
+    session: number;
+    siteId: string|null;
+}
+
+export interface UnitOfStudyRecord extends UnitOfStudy {
+    id: number
+}
 
 export class UnitOfStudyAPI {
     // Function for setting up the required tables and sequences in the database
@@ -13,6 +23,9 @@ export class UnitOfStudyAPI {
                     id INTEGER PRIMARY KEY DEFAULT NEXTVAL('UnitOfStudyIdSeq'),
                     code VARCHAR(32) NOT NULL,
                     name VARCHAR NOT NULL,
+                    year INTEGER,
+                    session TINYINT NOT NULL,
+                    lms_site_id VARCHAR,
                     created TIMESTAMP NOT NULL,
                     modified TIMESTAMP NOT NULL,
                 )
@@ -28,13 +41,29 @@ export class UnitOfStudyAPI {
         return reader.getRows();
     }
 
-    async newUnitOfStudy(db: DuckDBConnection, code: string, name: string): Promise<[number, string, string]> {
+    async newUnitOfStudy(db: DuckDBConnection, uos: UnitOfStudy): Promise<UnitOfStudyRecord> {
         const insert = await db.prepare(`
-            INSERT INTO unitOfStudy (code, name, created, modified) VALUES (?, ?, current_timestamp, current_timestamp) RETURNING (id)
+            INSERT INTO unitOfStudy (code, name, year, session, lms_site_id, created, modified) VALUES (?, ?, ?, ?, ?, current_timestamp, current_timestamp) RETURNING (id)
             `);
-        insert.bind([code, name]);
+
+        // Bind happy path values in bulk
+        const values = [uos.code, uos.name, uos.year, uos.session];
+        insert.bind(values);
+
+        // Handle dispatching to null when needed
+        if (uos.siteId === null) {
+            insert.bindNull(5)
+        }
+        else {
+            insert.bindVarchar(5, uos.siteId)
+        }
+
+        // Go!
         const reader = await insert.runAndReadAll();
 
-        return [reader.getRows()[0][0] as number, code, name]
+        return {
+            id: reader.getRows()[0][0] as number,
+            ...uos
+        }
     }
 }
