@@ -1,4 +1,4 @@
-import { DuckDBConnection, DuckDBValue } from '@duckdb/node-api';
+import { DuckDBConnection, DuckDBValue, DuckDBPreparedStatement } from '@duckdb/node-api';
 
 export interface UnitOfStudy {
     code: string;
@@ -51,12 +51,7 @@ export class UnitOfStudyAPI {
         insert.bind(values);
 
         // Handle dispatching to null when needed
-        if (uos.siteId === null) {
-            insert.bindNull(5)
-        }
-        else {
-            insert.bindVarchar(5, uos.siteId)
-        }
+        bindMaybe(insert, (s, v) => s.bindVarchar(5, v), uos.siteId)
 
         // Go!
         const reader = await insert.runAndReadAll();
@@ -65,5 +60,15 @@ export class UnitOfStudyAPI {
             id: reader.getRows()[0][0] as number,
             ...uos
         }
+    }
+}
+
+function bindMaybe<T>(statement: DuckDBPreparedStatement, binder: (statement: DuckDBPreparedStatement, value: NonNullable<T>) => any, value: T) {
+    // Handle dispatching to null when needed
+    if (value === null || value === undefined) {
+        statement.bindNull(5)
+    }
+    else {
+        binder(statement, value)
     }
 }
