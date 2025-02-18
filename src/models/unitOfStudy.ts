@@ -5,11 +5,25 @@ export interface UnitOfStudy {
     name: string;
     year: number;
     session: number;
-    siteId: string|null;
+    siteId: string | null;
 }
 
-export interface UnitOfStudyRecord extends UnitOfStudy {
-    id: number
+export class UnitOfStudyRecord implements UnitOfStudy {
+    id: number;
+    code: string;
+    name: string;
+    year: number;
+    session: number;
+    siteId: string | null;
+
+    constructor(id: number, code: string, name: string, year: number, session: number, siteId: string) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
+        this.year = year;
+        this.session = session;
+        this.siteId = siteId;
+    }
 }
 
 export class UnitOfStudyAPI {
@@ -33,12 +47,19 @@ export class UnitOfStudyAPI {
         })
     }
 
-    async listUnitsOfStudy(db: DuckDBConnection, coordinatorId: number): Promise<DuckDBValue[][]> {
+    async listUnitsOfStudy(db: DuckDBConnection): Promise<UnitOfStudyRecord[]> {
         const reader = await db.runAndReadAll(`
-            SELECT * FROM unitOfStudy;
+            SELECT id, code, name, year, session, lms_site_id FROM unitOfStudy;
         `);
 
-        return reader.getRows();
+        return reader.getRows().map(row => new UnitOfStudyRecord(
+                row[0] as number,
+                row[1] as string,
+                row[2] as string,
+                row[3] as number,
+                row[4] as number,
+                row[5] as string,
+        ));
     }
 
     async newUnitOfStudy(db: DuckDBConnection, uos: UnitOfStudy): Promise<UnitOfStudyRecord> {
