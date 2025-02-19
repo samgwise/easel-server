@@ -8,22 +8,8 @@ export interface UnitOfStudy {
     siteId: string | null;
 }
 
-export class UnitOfStudyRecord implements UnitOfStudy {
+export interface UnitOfStudyRecord extends UnitOfStudy {
     id: number;
-    code: string;
-    name: string;
-    year: number;
-    session: number;
-    siteId: string | null;
-
-    constructor(id: number, code: string, name: string, year: number, session: number, siteId: string) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-        this.year = year;
-        this.session = session;
-        this.siteId = siteId;
-    }
 }
 
 export class UnitOfStudyAPI {
@@ -52,14 +38,15 @@ export class UnitOfStudyAPI {
             SELECT id, code, name, year, session, lms_site_id FROM unitOfStudy;
         `);
 
-        return reader.getRows().map(row => new UnitOfStudyRecord(
-                row[0] as number,
-                row[1] as string,
-                row[2] as string,
-                row[3] as number,
-                row[4] as number,
-                row[5] as string,
-        ));
+        return reader.getRows().map(row => ({
+                id: row[0] as number,
+                code: row[1] as string,
+                name: row[2] as string,
+                year: row[3] as number,
+                session: row[4] as number,
+                siteId: row[5] as string,
+            })
+        );
     }
 
     async newUnitOfStudy(db: DuckDBConnection, uos: UnitOfStudy): Promise<UnitOfStudyRecord> {
