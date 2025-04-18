@@ -1,4 +1,5 @@
 import { DuckDBConnection, DuckDBValue, DuckDBPreparedStatement } from '@duckdb/node-api';
+import _ from 'radashi';
 
 export interface UnitOfStudy {
     code: string;
@@ -12,14 +13,15 @@ export interface UnitOfStudyRecord extends UnitOfStudy {
     id: number;
 }
 
+// This should be moved next to listUnitsOfStudy
+type listUnitsOfStudyRow = [number, string, string, number, string, string];
+
 export class UnitOfStudyAPI {
     // Function for setting up the required tables and sequences in the database
     async initModel(db: DuckDBConnection) {
         await db.run(`
-            CREATE SEQUENCE IF NOT EXISTS UnitOfStudyIdSeq START 1
-        `).then(_ => {
-            db.run(`
-                CREATE TABLE IF NOT EXISTS unitOfStudy (
+            CREATE SEQUENCE IF NOT EXISTS UnitOfStudyIdSeq START 1;
+            CREATE TABLE IF NOT EXISTS unitOfStudy (
                     id INTEGER PRIMARY KEY DEFAULT NEXTVAL('UnitOfStudyIdSeq'),
                     code VARCHAR(32) NOT NULL,
                     name VARCHAR NOT NULL,
@@ -29,8 +31,7 @@ export class UnitOfStudyAPI {
                     created TIMESTAMP NOT NULL,
                     modified TIMESTAMP NOT NULL,
                 )
-            `)
-        })
+        `)
     }
 
     async listUnitsOfStudy(db: DuckDBConnection): Promise<UnitOfStudyRecord[]> {
@@ -47,6 +48,18 @@ export class UnitOfStudyAPI {
                 siteId: row[5] as string,
             })
         );
+    }
+
+    // Example of the tuple casting trick to make type assertions simpler and less error prone.
+    // Now all this needs is a refactor to move the type definition next to the function body.
+    async listUnitsOfStudy2<T>(db: DuckDBConnection, transform: (value: listUnitsOfStudyRow) => T): Promise<T[]> {
+        const reader = await db.runAndReadAll(`
+            SELECT id, code, name, year, session, lms_site_id FROM unitOfStudy;
+        `);
+
+        return reader.getRows()
+            .map(r => r as listUnitsOfStudyRow)
+            .map(transform)
     }
 
     async newUnitOfStudy(db: DuckDBConnection, uos: UnitOfStudy): Promise<UnitOfStudyRecord> {

@@ -3,7 +3,8 @@
   "dependencies": {
     "@duckdb/node-api": "^1.2.0-alpha.14",
     "@mojojs/core": "^1.26.10",
-    "@tapjs/typescript": "^3.0.0"
+    "@tapjs/typescript": "^3.0.0",
+    "radashi": "^12.4.0"
   },
   "devDependencies": {
     "@types/busboy": "^1.5.0",
