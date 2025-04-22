@@ -14,7 +14,24 @@ export interface UnitOfStudyRecord extends UnitOfStudy {
 }
 
 // This should be moved next to listUnitsOfStudy
-type listUnitsOfStudyRow = [number, string, string, number, string, string];
+type ListUnitsOfStudyRow = [number, string, string, number, string, string];
+
+// Example of class shorthand
+export class UnitOfStudyRecord2 {
+    constructor(
+        id: number,
+        code: string,
+        name: string,
+        year: number,
+        session: number,
+        siteId: string | null,
+    ) {}
+}
+
+// Return an object from a row by associating the values to the given keys. The object's type can be inferred by the calling context or provided as a generic parameter.
+export function rowToClass<T>(row: DuckDBValue[], ...attributes: string[]): T {
+    return _.zipToObject(attributes, row) as T
+}
 
 export class UnitOfStudyAPI {
     // Function for setting up the required tables and sequences in the database
@@ -52,14 +69,35 @@ export class UnitOfStudyAPI {
 
     // Example of the tuple casting trick to make type assertions simpler and less error prone.
     // Now all this needs is a refactor to move the type definition next to the function body.
-    async listUnitsOfStudy2<T>(db: DuckDBConnection, transform: (value: listUnitsOfStudyRow) => T): Promise<T[]> {
+    async listUnitsOfStudy2<T>(db: DuckDBConnection, transform: (value: ListUnitsOfStudyRow) => T): Promise<T[]> {
         const reader = await db.runAndReadAll(`
             SELECT id, code, name, year, session, lms_site_id FROM unitOfStudy;
         `);
 
         return reader.getRows()
-            .map(r => r as listUnitsOfStudyRow)
+            .map(r => r as ListUnitsOfStudyRow)
             .map(transform)
+    }
+
+    // Example of backwards object construction, less type declarations and array accesses.
+    async listUnitsOfStudy3(db: DuckDBConnection): Promise<UnitOfStudyRecord[]> {
+        const reader = await db.runAndReadAll(`
+            SELECT id, code, name, year, session, lms_site_id FROM unitOfStudy;
+        `);
+
+        return reader.getRows()
+            // Note this could be zipToObject
+            .map(r => _.construct(_.zip(['id', 'code', 'name', 'year', 'session', 'siteId'], r)) as UnitOfStudyRecord)
+    }
+
+    // Extension of 3rd version with generic rowToClass function.
+    async listUnitsOfStudy4(db: DuckDBConnection): Promise<UnitOfStudyRecord[]> {
+        const reader = await db.runAndReadAll(`
+            SELECT id, code, name, year, session, lms_site_id FROM unitOfStudy;
+        `);
+
+        return reader.getRows()
+            .map(r => rowToClass(r, 'id', 'code', 'name', 'year', 'session', 'siteId'))
     }
 
     async newUnitOfStudy(db: DuckDBConnection, uos: UnitOfStudy): Promise<UnitOfStudyRecord> {
