@@ -1,5 +1,5 @@
 import { DuckDBConnection, DuckDBValue, DuckDBPreparedStatement } from '@duckdb/node-api';
-import _ from 'radashi';
+import { zipToObject } from 'radashi';
 
 export interface UnitOfStudy {
     code: string;
@@ -25,12 +25,12 @@ export class UnitOfStudyRecord2 {
         year: number,
         session: number,
         siteId: string | null,
-    ) {}
+    ) { }
 }
 
 // Return an object from a row by associating the values to the given keys. The object's type can be inferred by the calling context or provided as a generic parameter.
 export function rowToClass<T>(row: DuckDBValue[], ...attributes: string[]): T {
-    return _.zipToObject(attributes, row) as T
+    return zipToObject(attributes, row) as T
 }
 
 export class UnitOfStudyAPI {
@@ -57,13 +57,13 @@ export class UnitOfStudyAPI {
         `);
 
         return reader.getRows().map(row => ({
-                id: row[0] as number,
-                code: row[1] as string,
-                name: row[2] as string,
-                year: row[3] as number,
-                session: row[4] as number,
-                siteId: row[5] as string,
-            })
+            id: row[0] as number,
+            code: row[1] as string,
+            name: row[2] as string,
+            year: row[3] as number,
+            session: row[4] as number,
+            siteId: row[5] as string,
+        })
         );
     }
 
@@ -87,7 +87,7 @@ export class UnitOfStudyAPI {
 
         return reader.getRows()
             // Note this could be zipToObject
-            .map(r => _.construct(_.zip(['id', 'code', 'name', 'year', 'session', 'siteId'], r)) as UnitOfStudyRecord)
+            .map(r => zipToObject(['id', 'code', 'name', 'year', 'session', 'siteId'], r) as UnitOfStudyRecord)
     }
 
     // Extension of 3rd version with generic rowToClass function.
